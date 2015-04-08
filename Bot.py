@@ -22,15 +22,20 @@ class Bot:
         self._k22 = k22
 
     def process(self, world):
+        # TODO: make these actual sensor locations
         sensorxL = self._x
         sensoryL = self._y
         sensorxR = self._x
         sensoryR = self._y
+
         leftTotal = 0
         rightTotal = 0
+
         for light in world.getLights():
             leftTotal += light.getStrength(sensorxL, sensoryL)
             rightTotal += light.getStrength(sensorxR, sensoryR)
+
+        # TODO: move this according to the k matrix and _stepDistance
         self._x += leftTotal
         self._y += rightTotal
 

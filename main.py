@@ -3,9 +3,12 @@
 from World import *
 from Light import *
 from Bot import *
+from Window import *
 
 
 def main():
+    w = Window()
+    w.display()
     world = World()
     l = Light()
     l.move(2,2)
