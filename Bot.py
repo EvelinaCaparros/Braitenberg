@@ -10,7 +10,7 @@ class Bot:
     
     _stepDistance = 1
 
-    def __init__(self, master=0, x=0, y=0, angle=0, sizeX=100, sizeY=100, k11=1, k12=0, k21=0, k22=0):
+    def __init__(self, master=0, x=0, y=0, angle=0, sizeX=100, sizeY=100, k11=1.0, k12=0.0, k21=0.0, k22=1.0):
         self._sizeX = sizeX
         self._sizeY = sizeY
         self._x = int(x)
@@ -18,10 +18,10 @@ class Bot:
         self._topX = self._x - self._sizeX/2
         self._topY = self._y - self._sizeY/2
         self._angle = int(angle)
-        self._k11 = int(k11)
-        self._k12 = int(k12)
-        self._k21 = int(k21)
-        self._k22 = int(k22)
+        self._k11 = float(k11)
+        self._k12 = float(k12)
+        self._k21 = float(k21)
+        self._k22 = float(k22)
         self._master = master
         self._filename='spider.png'
         image = Image.open(self._filename)
@@ -34,11 +34,11 @@ class Bot:
         self._oldAngle = self._angle
 
 
-    def setMatrix(self, k11=1, k12=0, k21=0, k22=0):
-        self._k11 = k11
-        self._k12 = k12
-        self._k21 = k21
-        self._k22 = k22
+    def setMatrix(self, k11=1.0, k12=0.0, k21=0.0, k22=1.0):
+        self._k11 = float(k11)
+        self._k12 = float(k12)
+        self._k21 = float(k21)
+        self._k22 = float(k22)
 
     def _update(self):
         self._topX = self._x - self._sizeX/2
