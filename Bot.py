@@ -31,6 +31,7 @@ class Bot:
         label.image = imagetk
         label.place(x=self._topX,y=self._topY)
         self._container = label
+        self._oldAngle = self._angle
 
 
     def setMatrix(self, k11=1, k12=0, k21=0, k22=0):
@@ -42,13 +43,15 @@ class Bot:
     def _update(self):
         self._topX = self._x - self._sizeX/2
         self._topY = self._y - self._sizeY/2
-        image = Image.open(self._filename)
-        image = image.resize((self._sizeX,self._sizeY), Image.ANTIALIAS)
-        imagetk = ImageTk.PhotoImage(image.rotate(self._angle))
-        self._container.destroy()
-        self._container = Label(self._master, image=imagetk)
-        self._container.image = imagetk
+        if self._oldAngle != self._angle:
+            image = Image.open(self._filename)
+            image = image.resize((self._sizeX,self._sizeY), Image.ANTIALIAS)
+            imagetk = ImageTk.PhotoImage(image.rotate(self._angle))
+            self._container.destroy()
+            self._container = Label(self._master, image=imagetk)
+            self._container.image = imagetk
         self._container.place(x=self._topX, y=self._topY)
+        self._oldAngle = self._angle
 
     def _rotate(self, xx, yy, cx, cy):
 
