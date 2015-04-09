@@ -2,7 +2,7 @@
 
 from Light import *
 from Tkinter import *
-from math import sin,cos
+from math import sin,cos,radians
 from PIL import Image
 from PIL import ImageTk
 
@@ -50,12 +50,41 @@ class Bot:
         self._container.image = imagetk
         self._container.place(x=self._topX, y=self._topY)
 
+    def _rotate(self, xx, yy, cx, cy):
+
+        angle = -self._angle
+
+        # Center around origin
+        x = xx - cx
+        y = yy - cy
+
+        # Use trig to rotate around origin
+        newx = (x*cos(radians(angle))) - (y*sin(radians(angle)))
+        newy = (x*sin(radians(angle))) + (y*cos(radians(angle)))
+
+        # Translate back
+        newx += cx
+        newy += cy
+
+        return newx,newy
+
     def process(self, world):
-        # TODO: make these actual sensor locations
-        sensorxL = self._x
-        sensoryL = self._y
-        sensorxR = self._x
-        sensoryR = self._y
+        # Cache values
+        x = self._x
+        y = self._y
+        sizeX = self._sizeX
+        sizeY = self._sizeY
+        angle = self._angle
+
+        # Find sensors
+        sensorxL = x - (sizeX*3)/8
+        sensoryL = y - sizeY/2
+        sensorxR = x + (sizeX*3)/8 
+        sensoryR = y - sizeY/2 
+
+        # Rotate points by angle
+        sensorxL,sensoryL = self._rotate(sensorxL, sensoryL, x, y)
+        sensorxR,sensoryR = self._rotate(sensorxR, sensoryR, x, y)
 
         leftTotal = 0.0
         rightTotal = 0.0
@@ -64,9 +93,19 @@ class Bot:
             leftTotal += light.getStrength(sensorxL, sensoryL)
             rightTotal += light.getStrength(sensorxR, sensoryR)
 
+        """ At this point, sensorxL and sensoryL represents the location of 
+            the left sensor and senxoryR and sensoryR is the location of
+            the right sensor. We also have leftTotal and rightTotal which is
+            the total amount of light that each sensor is detecting,
+            respectively """
+
         # TODO: move this according to the k matrix and _stepDistance
+        """ The end of this function needs to update the values of 
+            self._x, self._y, and self._angle to whatever they should be
+            and then call self._update to update the GUI """
         self._x += leftTotal + 10
         self._y += rightTotal + 10
+        self._angle = 0
 
         self._update()
 
