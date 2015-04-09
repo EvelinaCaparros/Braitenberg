@@ -15,6 +15,10 @@ class World:
 
     def addLight(self, light):
         self._lights.append(light)
+    
+    def nextFrame(self):
+        for bot in self._bots:
+            bot.process(self)
 
     def getBots(self):
         return self._bots

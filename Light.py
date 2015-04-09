@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 
 from math import sqrt
+from Tkinter import *
 
 class Light:
-    def __init__(self, x=0, y=0):
-        self._x = x
-        self._y = y
+    def __init__(self, master=0, x=0, y=0):
+        self._x = int(x)
+        self._y = int(y)
+        self._master = master
+        self._graphic = Button(master, text="Light")
+        self._graphic.place(x=x,y=y)
     
     def getStrength(self, x, y):
         distance = sqrt( (self._x - x)**2 +  (self._y - y)**2 )
         return 1 / (distance * distance)
+
+    def _update(self):
+        self._graphic.place(x=self._x, y=self._y)
 
     def getLocation(self):
         return self._x, self._y

@@ -1,25 +1,32 @@
 #!/usr/bin/env python
 
 from Light import *
+from Tkinter import *
 
 class Bot:
     
-    _stepDistance = .01
+    _stepDistance = 1
 
-    def __init__(self, x=0, y=0, angle=0, k11=1, k12=0, k21=0, k22=0):
-        self._x = x
-        self._y = y
-        self._angle = angle
-        self._k11 = k11
-        self._k12 = k12
-        self._k21 = k21
-        self._k22 = k22
+    def __init__(self, master=0, x=0, y=0, angle=0, k11=1, k12=0, k21=0, k22=0):
+        self._x = int(x)
+        self._y = int(y)
+        self._angle = int(angle)
+        self._k11 = int(k11)
+        self._k12 = int(k12)
+        self._k21 = int(k21)
+        self._k22 = int(k22)
+        self._master = master
+        self._graphic = Button(master)
+        self._graphic.place(x=x,y=y)
 
     def setMatrix(self, k11=1, k12=0, k21=0, k22=0):
         self._k11 = k11
         self._k12 = k12
         self._k21 = k21
         self._k22 = k22
+
+    def _update(self):
+        self._graphic.place(x=self._x, y=self._y)
 
     def process(self, world):
         # TODO: make these actual sensor locations
@@ -38,6 +45,8 @@ class Bot:
         # TODO: move this according to the k matrix and _stepDistance
         self._x += leftTotal
         self._y += rightTotal
+
+        self._update()
 
     def getLocation(self):
         return self._x, self._y

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 from Tkinter import *
+from Bot import *
+from Light import *
+from World import *
 
 class Window:
     @staticmethod
@@ -45,6 +48,7 @@ class Window:
         self._by = StringVar()
         self._lx = StringVar()
         self._ly = StringVar()
+        self._world = World()
         self._initMenu()
 
     # Place objects into window
@@ -69,7 +73,7 @@ class Window:
         by = Entry(self._menu, justify=RIGHT, textvariable=self._by)
         self._bx.set("0")
         self._by.set("0")
-        addBotButton = Button(self._menu, text="Add Bot")
+        addBotButton = Button(self._menu, text="Add Bot", command=self._addBot)
         lightPositionLabel = Label(self._menu, text="Position:")
         lightXLabel = Label(self._menu, text="X:")
         lightYLabel = Label(self._menu, text="Y:")
@@ -77,7 +81,7 @@ class Window:
         ly = Entry(self._menu, justify=RIGHT, textvariable=self._ly)
         self._lx.set("0")
         self._ly.set("0")
-        addLightButton = Button(self._menu, text="Add Light")
+        addLightButton = Button(self._menu, text="Add Light", command=self._addLight)
 
         # attach objects to menu in position
         startButton.grid(row=0, column=0, sticky=N)
@@ -106,5 +110,18 @@ class Window:
 
     # TODO: start thread to run simulation
     def _sim(self):
-        pass
+        self._world.nextFrame()
+
+    def _addBot(self):
+        b = Bot(self._frame, self._bx.get(), self._by.get())
+        k11 = self._k11.get()
+        k12 = self._k12.get()
+        k21 = self._k21.get()
+        k22 = self._k22.get()
+        b.setMatrix(k11,k12,k21,k22)
+        self._world.addBot(b)
+
+    def _addLight(self):
+        l = Light(self._frame, self._lx.get(), self._ly.get())
+        self._world.addLight(l)
 
