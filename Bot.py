@@ -2,6 +2,9 @@
 
 from Light import *
 from Tkinter import *
+from math import sin,cos
+from PIL import Image
+from PIL import ImageTk
 
 class Bot:
     
@@ -16,8 +19,11 @@ class Bot:
         self._k21 = int(k21)
         self._k22 = int(k22)
         self._master = master
-        self._graphic = Button(master)
-        self._graphic.place(x=x,y=y)
+        image = Image.open('spider.png')
+        imagetk = ImageTk.PhotoImage(image)
+        label = Label(master, image=imagetk)
+        label.image = imagetk
+        label.place(x=x,y=y)
 
     def setMatrix(self, k11=1, k12=0, k21=0, k22=0):
         self._k11 = k11
@@ -26,6 +32,7 @@ class Bot:
         self._k22 = k22
 
     def _update(self):
+        pass
         self._graphic.place(x=self._x, y=self._y)
 
     def process(self, world):
@@ -35,8 +42,8 @@ class Bot:
         sensorxR = self._x
         sensoryR = self._y
 
-        leftTotal = 0
-        rightTotal = 0
+        leftTotal = 0.0
+        rightTotal = 0.0
 
         for light in world.getLights():
             leftTotal += light.getStrength(sensorxL, sensoryL)

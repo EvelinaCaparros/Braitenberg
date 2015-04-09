@@ -15,20 +15,20 @@ class Window:
     _menuWidth=200
     _menuHeight=600
     _menuColor = _RGB.__func__(255,255,255)
-    _frameColor = _RGB.__func__(240,240,240)
+    _canvasColor = _RGB.__func__(240,240,240)
 
     # Window constructor
     def __init__(self, w=800, h=600):
         self._root = Tk()
         self._root.title("Braitenberg Vehicles")
         self._root.resizable(width=FALSE, height=FALSE)
-        self._frame = Frame(self._root,
-                            width=w,
-                            height=h,
-                            bd=1,
-                            relief=SUNKEN,
-                            background=self._frameColor,
-                            )
+        self._canvas = Canvas(self._root,
+                              width=w,
+                              height=h,
+                              bd=1,
+                              relief=SUNKEN,
+                              background=self._canvasColor,
+                              )
         self._menu = Frame(self._root,
                            width=self._menuWidth,
                            height=self._menuHeight,
@@ -36,8 +36,8 @@ class Window:
                            relief=SUNKEN,
                            bg=self._menuColor,
                            )
-        self._frame.grid(row=0, column=0, sticky=N+W, padx=2, pady=2)
-        self._frame.grid_propagate(False)
+        self._canvas.grid(row=0, column=0, sticky=N+W, padx=2, pady=2)
+        self._canvas.grid_propagate(False)
         self._menu.grid(row=0, column=1, sticky=N+W, padx=2, pady=2)
         self._menu.grid_propagate(False)
         self._k11 = StringVar()
@@ -113,7 +113,7 @@ class Window:
         self._world.nextFrame()
 
     def _addBot(self):
-        b = Bot(self._frame, self._bx.get(), self._by.get())
+        b = Bot(self._canvas, self._bx.get(), self._by.get(), angle=30)
         k11 = self._k11.get()
         k12 = self._k12.get()
         k21 = self._k21.get()
@@ -122,6 +122,6 @@ class Window:
         self._world.addBot(b)
 
     def _addLight(self):
-        l = Light(self._frame, self._lx.get(), self._ly.get())
+        l = Light(self._canvas, self._lx.get(), self._ly.get())
         self._world.addLight(l)
 

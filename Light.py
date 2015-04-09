@@ -4,16 +4,17 @@ from math import sqrt
 from Tkinter import *
 
 class Light:
-    def __init__(self, master=0, x=0, y=0):
+    def __init__(self, master=0, x=0, y=0, intensity=100):
         self._x = int(x)
         self._y = int(y)
+        self._intensity = float(intensity)
         self._master = master
         self._graphic = Button(master, text="Light")
         self._graphic.place(x=x,y=y)
     
     def getStrength(self, x, y):
-        distance = sqrt( (self._x - x)**2 +  (self._y - y)**2 )
-        return 1 / (distance * distance)
+        distance = sqrt( float((self._x - x)**2 +  (self._y - y)**2) )
+        return self._intensity / distance
 
     def _update(self):
         self._graphic.place(x=self._x, y=self._y)
