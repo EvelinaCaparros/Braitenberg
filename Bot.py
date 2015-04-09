@@ -2,13 +2,13 @@
 
 from Light import *
 from Tkinter import *
-from math import sin,cos,radians
+from math import sin,cos,atan,radians,degrees
 from PIL import Image
 from PIL import ImageTk
 
 class Bot:
     
-    _stepDistance = 1
+    _scale = .1
 
     def __init__(self, master=0, x=0, y=0, angle=0, sizeX=100, sizeY=100, k11=1.0, k12=0.0, k21=0.0, k22=1.0):
         self._sizeX = sizeX
@@ -78,38 +78,53 @@ class Bot:
         sizeX = self._sizeX
         sizeY = self._sizeY
         angle = self._angle
+        k11 = self._k11
+        k12 = self._k12
+        k21 = self._k21
+        k22 = self._k22
 
         # Find sensors
-        sensorxL = x - (sizeX*3)/8
-        sensoryL = y - sizeY/2
-        sensorxR = x + (sizeX*3)/8 
-        sensoryR = y - sizeY/2 
+        sensorxL_static = x - (sizeX*3)/8
+        sensoryL_static = y - sizeY/2
+        sensorxR_static = x + (sizeX*3)/8 
+        sensoryR_static = y - sizeY/2 
 
         # Rotate points by angle
-        sensorxL,sensoryL = self._rotate(sensorxL, sensoryL, x, y)
-        sensorxR,sensoryR = self._rotate(sensorxR, sensoryR, x, y)
+        sensorxL,sensoryL = self._rotate(sensorxL_static, sensoryL_static, x, y)
+        sensorxR,sensoryR = self._rotate(sensorxR_static, sensoryR_static, x, y)
 
-        leftTotal = 0.0
-        rightTotal = 0.0
+        s1 = 0.0
+        s2 = 0.0
 
         for light in world.getLights():
-            leftTotal += light.getStrength(sensorxL, sensoryL)
-            rightTotal += light.getStrength(sensorxR, sensoryR)
+            s1 += light.getStrength(sensorxL, sensoryL)
+            s2 += light.getStrength(sensorxR, sensoryR)
 
         """ At this point, sensorxL and sensoryL represents the location of 
             the left sensor and senxoryR and sensoryR is the location of
-            the right sensor. We also have leftTotal and rightTotal which is
-            the total amount of light that each sensor is detecting,
-            respectively """
+            the right sensor. We also have s1 and s2 which are the total
+            amount of light that each sensor is detecting, respectively """
 
-        # TODO: move this according to the k matrix and _stepDistance
         """ The end of this function needs to update the values of 
             self._x, self._y, and self._angle to whatever they should be
             and then call self._update to update the GUI """
-        self._x += leftTotal + 10
-        self._y += rightTotal + 10
-        self._angle = 0
 
+        # Calculate as per k matrix
+        w1 = k11 * s1 + k12 * s2
+        w2 = k21 * s1 + k22 * s2
+
+        # Scale values
+        w1 *= self._scale
+        w2 *= self._scale
+
+        # Calculate resultant rotation
+        rotation = degrees(atan((w2-w1)/(sensorxR_static-sensorxL_static)))
+
+        # Update values
+        self._angle = angle+rotation
+        self._x,self._y = self._rotate(x,y-(w1+w2)/2, x, y)
+
+        # Update GUI
         self._update()
 
     def getLocation(self):
