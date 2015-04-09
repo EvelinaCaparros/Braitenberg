@@ -4,6 +4,8 @@ from Tkinter import *
 from Bot import *
 from Light import *
 from World import *
+from threading import Thread
+from time import sleep
 
 class Window:
     @staticmethod
@@ -16,6 +18,7 @@ class Window:
     _menuHeight=600
     _menuColor = _RGB.__func__(240,240,240)
     _canvasColor = _RGB.__func__(218,218,218)
+    _frequency = 20
 
     # Window constructor
     def __init__(self, w=800, h=600):
@@ -50,13 +53,16 @@ class Window:
         self._ly = StringVar()
         self._world = World()
         self._initMenu()
+        self._isRunning = False
 
     # Place objects into window
     def _initMenu(self):
         self._menu.columnconfigure(0, weight=1)
         self._menu.columnconfigure(1, weight=1)
-        startButton = Button(self._menu, text="Start", command=self._sim)
+        stepButton = Button(self._menu, text="Step", command=self._step)
         quitButton = Button(self._menu, text="Quit", command=exit)
+        simButton = Button(self._menu, text="Start Simulation", command=self._sim)
+        self._simButton = simButton
         matrixLabel = Label(self._menu, text="K Matrix:")
         k11 = Entry(self._menu, justify=RIGHT, textvariable=self._k11)
         k12 = Entry(self._menu, justify=RIGHT, textvariable=self._k12)
@@ -84,36 +90,51 @@ class Window:
         addLightButton = Button(self._menu, text="Add Light", command=self._addLight)
 
         # attach objects to menu in position
-        startButton.grid(row=0, column=0, sticky=N)
+        stepButton.grid(row=0, column=0, sticky=N)
         quitButton.grid(row=0, column=1, sticky=N)
-        matrixLabel.grid(row=1, column=0, columnspan=2, sticky=N)
-        k11.grid(row=2, column=0, sticky=N)
-        k12.grid(row=2, column=1, sticky=N)
-        k21.grid(row=3, column=0, sticky=N)
-        k22.grid(row=3, column=1, sticky=N)
-        botPositionLabel.grid(row=4, column=0, columnspan=2, sticky=N)
-        botXLabel.grid(row=5, column=0, sticky=N+E)
-        botYLabel.grid(row=6, column=0, sticky=N+E)
-        bx.grid(row=5, column=1, sticky=N)
-        by.grid(row=6, column=1, sticky=N)
-        addBotButton.grid(row=7, column=0, columnspan=2, sticky=N)
-        lightPositionLabel.grid(row=8, column=0, columnspan=2, sticky=N)
-        lightXLabel.grid(row=9, column=0, sticky=N+E)
-        lightYLabel.grid(row=10, column=0, sticky=N+E)
-        lx.grid(row=9, column=1, sticky=N)
-        ly.grid(row=10, column=1, sticky=N)
-        addLightButton.grid(row=11, column=0, columnspan=2, sticky=N)
+        simButton.grid(row=1, column=0, columnspan=2, sticky=N)
+        matrixLabel.grid(row=2, column=0, columnspan=2, sticky=N)
+        k11.grid(row=3, column=0, sticky=N)
+        k12.grid(row=3, column=1, sticky=N)
+        k21.grid(row=4, column=0, sticky=N)
+        k22.grid(row=4, column=1, sticky=N)
+        botPositionLabel.grid(row=5, column=0, columnspan=2, sticky=N)
+        botXLabel.grid(row=6, column=0, sticky=N+E)
+        botYLabel.grid(row=7, column=0, sticky=N+E)
+        bx.grid(row=6, column=1, sticky=N)
+        by.grid(row=7, column=1, sticky=N)
+        addBotButton.grid(row=8, column=0, columnspan=2, sticky=N)
+        lightPositionLabel.grid(row=9, column=0, columnspan=2, sticky=N)
+        lightXLabel.grid(row=10, column=0, sticky=N+E)
+        lightYLabel.grid(row=11, column=0, sticky=N+E)
+        lx.grid(row=10, column=1, sticky=N)
+        ly.grid(row=11, column=1, sticky=N)
+        addLightButton.grid(row=12, column=0, columnspan=2, sticky=N)
 
     # displays the window
     def display(self):
         self._root.mainloop()
 
-    # TODO: start thread to run simulation
-    def _sim(self):
+    def _step(self):
         self._world.nextFrame()
 
+    def _run(self):
+        while self._isRunning:
+            self._world.nextFrame()
+            sleep(1.0/self._frequency)
+
+    def _sim(self):
+        self._isRunning = not self._isRunning
+        if self._isRunning:
+            thread = Thread(target=self._run)
+            thread.daemon = True
+            thread.start()
+            self._simButton["text"] = "Stop Simulation"
+        else:
+            self._simButton["text"] = "Start Simulation"
+
     def _addBot(self):
-        b = Bot(self._canvas, self._bx.get(), self._by.get(), angle=30)
+        b = Bot(self._canvas, self._bx.get(), self._by.get())
         k11 = self._k11.get()
         k12 = self._k12.get()
         k21 = self._k21.get()

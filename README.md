@@ -3,6 +3,7 @@
 This project contains a braitenberg simulator where the direction is user defined based on a matrix (the K matrix).
 
 ## Recent Changes
+* Added Start/Stop button for simulation
 * self._x and self._y in Boy.py refer to the center of the Bot instead of the topleft corner
 * the Bot and Light class attach themselves to the canvas and move around
 
