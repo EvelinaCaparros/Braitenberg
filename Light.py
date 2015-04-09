@@ -6,7 +6,7 @@ from PIL import Image
 from PIL import ImageTk
 
 class Light:
-    def __init__(self, master=0, x=0, y=0, intensity=100):
+    def __init__(self, master=0, x=0, y=0, intensity=1000):
         self._sizeX = 40
         self._sizeY = 40
         self._x = int(x)
