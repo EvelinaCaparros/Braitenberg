@@ -7,19 +7,21 @@ from PIL import ImageTk
 
 class Light:
     def __init__(self, master=0, x=0, y=0, intensity=100):
-        self._x = int(x)
-        self._y = int(y)
-        self._intensity = float(intensity)
-        self._master = master
         self._sizeX = 40
         self._sizeY = 40
+        self._x = int(x)
+        self._y = int(y)
+        self._topX = self._x - self._sizeX/2
+        self._topY = self._y - self._sizeY/2
+        self._intensity = float(intensity)
+        self._master = master
         self._filename='light.png'
         image = Image.open(self._filename)
         image = image.resize((self._sizeX,self._sizeY), Image.ANTIALIAS)
         imagetk = ImageTk.PhotoImage(image)
         label = Label(master, image=imagetk)
         label.image = imagetk
-        label.place(x=x,y=y)
+        label.place(x=self._topX,y=self._topY)
         self._imagetk = imagetk
         self._container = label
     
@@ -28,10 +30,12 @@ class Light:
         return self._intensity / distance
 
     def _update(self):
+        self._topX = self._x - self._sizeX/2
+        self._topY = self._y - self._sizeY/2
         self._container.destroy()
         self._container = Label(self._master, image=self._imagetk)
         self._container.image = imagetk
-        self._container.place(x=self._x, y=self._y)
+        self._container.place(x=self._topX, y=self._topY)
 
     def getLocation(self):
         return self._x, self._y
@@ -39,3 +43,5 @@ class Light:
     def move(self, x, y):
         self._x = x
         self._y = y
+        self._topX = self._x - self._sizeX/2
+        self._topY = self._y - self._sizeY/2

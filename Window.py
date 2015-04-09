@@ -14,8 +14,8 @@ class Window:
     # Default values
     _menuWidth=200
     _menuHeight=600
-    _menuColor = _RGB.__func__(255,255,255)
-    _canvasColor = _RGB.__func__(240,240,240)
+    _menuColor = _RGB.__func__(240,240,240)
+    _canvasColor = _RGB.__func__(218,218,218)
 
     # Window constructor
     def __init__(self, w=800, h=600):
