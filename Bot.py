@@ -2,6 +2,7 @@
 
 from Light import *
 from Tkinter import *
+from Preload import ImageCache
 from math import sin,cos,atan,radians,degrees
 from PIL import Image
 from PIL import ImageTk
@@ -23,14 +24,9 @@ class Bot:
         self._k21 = float(k21)
         self._k22 = float(k22)
         self._master = master
-        self._filename='spider.png'
-        image = Image.open(self._filename)
-        image = image.resize((self._sizeX,self._sizeY), Image.ANTIALIAS)
-        imagetk = ImageTk.PhotoImage(image.rotate(self._angle))
-        label = Label(master, image=imagetk)
-        label.image = imagetk
-        label.place(x=self._topX,y=self._topY)
-        self._container = label
+        self._cache = ImageCache(master, 'spider.png', self._sizeX, self._sizeY)
+        self._cache[0].place(x=self._topX, y=self._topY)
+        self._container = self._cache[0]
         self._oldAngle = self._angle
 
 
@@ -44,12 +40,8 @@ class Bot:
         self._topX = self._x - self._sizeX/2
         self._topY = self._y - self._sizeY/2
         if self._oldAngle != self._angle:
-            image = Image.open(self._filename)
-            image = image.resize((self._sizeX,self._sizeY), Image.ANTIALIAS)
-            imagetk = ImageTk.PhotoImage(image.rotate(self._angle))
-            self._container.destroy()
-            self._container = Label(self._master, image=imagetk)
-            self._container.image = imagetk
+            self._container.place_forget()
+            self._container = self._cache[int(self._angle)%360]
         self._container.place(x=self._topX, y=self._topY)
         self._oldAngle = self._angle
 
