@@ -110,6 +110,14 @@ class Bot:
         self._update()
 
     def getLocation(self):
+        if self._x <= 0:
+            self._x = 799
+        if self._x >= 800:
+            self._x = 1
+        if self._y <= 0:
+            self._y = 599
+        if self._y >= 600:
+            self._y = 1
         return self._x, self._y
 
     def getAngle(self):
