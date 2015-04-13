@@ -11,9 +11,15 @@ class Bot:
     
     _scale = .1
 
-    def __init__(self, master=0, x=0, y=0, angle=0, sizeX=100, sizeY=100, k11=1.0, k12=0.0, k21=0.0, k22=1.0):
-        self._sizeX = sizeX
-        self._sizeY = sizeY
+    def __init__(self, master=0, x=0, y=0, angle=0, sizeX=100, sizeY=100, sF = 1, k11=1.0, k12=0.0, k21=0.0, k22=1.0):
+        self._sF = float(sF)
+        
+        self._sizeX = int(sizeX) * self._sF
+        self._sizeY = int(sizeY) * self._sF
+        
+        self._sizeX = int(self._sizeX)
+        self._sizeY = int(self._sizeY)
+        
         self._x = int(x)
         self._y = int(y)
         self._topX = self._x - self._sizeX/2
@@ -115,6 +121,20 @@ class Bot:
         # Update values
         self._angle = angle+rotation
         self._x,self._y = self._rotate(x,y-(w1+w2)/2, x, y)
+
+        #resetting bounds
+        xLow, xHigh, yLow, yHigh = world.getBounds()
+        if self._x > xHigh+self._sizeX/2:
+            self._x = xLow-self._sizeX/2
+
+        elif self._x < xLow-self._sizeX/2:
+            self._x = xHigh+self._sizeX/2
+
+        if self._y > yHigh+self._sizeY/2:
+            self._y = yLow-self._sizeY/2
+
+        elif self._y < yLow-self._sizeY/2:
+            self._y = yHigh+self._sizeY/2
 
         # Update GUI
         self._update()

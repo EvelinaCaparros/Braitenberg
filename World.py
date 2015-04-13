@@ -27,5 +27,5 @@ class World:
         return self._lights
 
     def getBounds(self):
-        return xLow, xHigh, yLow, yHigh
+        return self._xLow, self._xHigh, self._yLow, self._yHigh
 

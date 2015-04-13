@@ -49,6 +49,7 @@ class Window:
         self._k22 = StringVar()
         self._bx = StringVar()
         self._by = StringVar()
+        self._bs = StringVar()                                          #this is added for the size of the bot
         self._lx = StringVar()
         self._ly = StringVar()
         self._world = World()
@@ -75,10 +76,17 @@ class Window:
         botPositionLabel = Label(self._menu, text="Position:")
         botXLabel = Label(self._menu, text="X:")
         botYLabel = Label(self._menu, text="Y:")
+        botSizeLabel = Label(self._menu, text="Size:")                  #this is added for the size
+
         bx = Entry(self._menu, justify=RIGHT, textvariable=self._bx)
         by = Entry(self._menu, justify=RIGHT, textvariable=self._by)
+        bs = Entry(self._menu, justify=RIGHT, textvariable=self._bs)    #this is added for the size
+
         self._bx.set("0")
         self._by.set("0")
+        self._bs.set("1")                                               #this is added for the size
+
+
         addBotButton = Button(self._menu, text="Add Bot", command=self._addBot)
         lightPositionLabel = Label(self._menu, text="Position:")
         lightXLabel = Label(self._menu, text="X:")
@@ -101,15 +109,17 @@ class Window:
         botPositionLabel.grid(row=5, column=0, columnspan=2, sticky=N)
         botXLabel.grid(row=6, column=0, sticky=N+E)
         botYLabel.grid(row=7, column=0, sticky=N+E)
+        botSizeLabel.grid(row=8, column=0, sticky=N+E)                  #this is added for the size
         bx.grid(row=6, column=1, sticky=N)
         by.grid(row=7, column=1, sticky=N)
-        addBotButton.grid(row=8, column=0, columnspan=2, sticky=N)
-        lightPositionLabel.grid(row=9, column=0, columnspan=2, sticky=N)
-        lightXLabel.grid(row=10, column=0, sticky=N+E)
-        lightYLabel.grid(row=11, column=0, sticky=N+E)
-        lx.grid(row=10, column=1, sticky=N)
-        ly.grid(row=11, column=1, sticky=N)
-        addLightButton.grid(row=12, column=0, columnspan=2, sticky=N)
+        bs.grid(row=8, column=1, sticky=N)                              #this is added for the size
+        addBotButton.grid(row=9, column=0, columnspan=2, sticky=N)
+        lightPositionLabel.grid(row=10, column=0, columnspan=2, sticky=N)
+        lightXLabel.grid(row=11, column=0, sticky=N+E)
+        lightYLabel.grid(row=12, column=0, sticky=N+E)
+        lx.grid(row=11, column=1, sticky=N)
+        ly.grid(row=12, column=1, sticky=N)
+        addLightButton.grid(row=13, column=0, columnspan=2, sticky=N)
 
     # displays the window
     def display(self):
@@ -134,7 +144,7 @@ class Window:
             self._simButton["text"] = "Start Simulation"
 
     def _addBot(self):
-        b = Bot(self._canvas, self._bx.get(), self._by.get())
+        b = Bot(self._canvas, self._bx.get(), self._by.get(), sF = self._bs.get())
         k11 = self._k11.get()
         k12 = self._k12.get()
         k21 = self._k21.get()

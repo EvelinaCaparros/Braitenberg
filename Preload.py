@@ -37,9 +37,12 @@ class ImageCache:
         return len(self._images)
 
     def __getitem__(self, i):
-        ret = self._images[i]
-        if ret:
-            return ret    
+        try:         
+            ret = self._images[i]
+            if ret:
+                return ret
+        except:
+            pass
         while not self._loaded:
             pass
         return self._images[i]
